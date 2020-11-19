@@ -6,17 +6,28 @@ const NewProject = () => {
   //Get state from form
   const projectsContext = useContext(projectContext);
   
-  const {form, showForm} = projectsContext;
+  const {form, errorForm, showForm, addProject, showError } = projectsContext;
 
   const [project, setProject] = useState({name: ''});
-
+  
+  const {name} = project;
+  
   const handleChange = e => setProject({...project, [e.target.name]: e.target.value});
-
+  
   const handleSubmit = e => {
     e.preventDefault();
-  }
+    //Validate project
+    if(name === '') {
+      showError();
+      return;
+    }
+    
+    //add to the state
+    addProject(project);
 
-  const {name} = project;
+    //reset form
+    setProject({name: ''});
+  }
 
   return ( 
     <Fragment>
@@ -31,7 +42,7 @@ const NewProject = () => {
                 type="text"
                 className='input-text'
                 placeholder= "Project' s Name"
-                name= 'name'  
+                name='name'  
                 onChange={handleChange}
                 value={name}
               />
@@ -40,6 +51,7 @@ const NewProject = () => {
           )
           : null
       }
+      {errorForm ? <p className='mensaje error'>This field is required</p> : null}
     </Fragment>
   );
 }
